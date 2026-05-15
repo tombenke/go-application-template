@@ -1,0 +1,39 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  continuous_integration:
+    name: Run Continuous Integration workflow
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set up task tool
+        uses: arduino/setup-task@v1
+
+      - name: Setup Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: "1.25"
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Task install
+        run: task install-on-ci
+
+      - name: Task lint
+        run: task lint
+
+      - name: Task test
+        run: task test
+
+      - name: Task build
+        run: task build

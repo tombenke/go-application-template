@@ -1,0 +1,69 @@
+version: "2"
+linters:
+  enable:
+    - exhaustive
+    - gochecksumtype
+    - testifylint
+    - usetesting
+    - unparam
+    - unconvert
+    - revive
+    - prealloc
+    - godot
+    - funcorder
+    - errname
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    paths:
+      - third_party$
+      - builtin$
+      - examples$
+  settings:
+    revive:
+      enable-all-rules: true
+      rules:
+        - name: line-length-limit
+          disabled: true
+        - name: comment-spacings
+          disabled: true
+        - name: function-length
+          disabled: true
+        - name: var-naming
+          disabled: true
+        - name: import-alias-naming
+          disabled: true
+        - name: get-return
+          disabled: true
+        - name: empty-lines
+          disabled: true
+        - name: cognitive-complexity
+          disabled: true
+        - name: cyclomatic
+          disabled: true
+        - name: add-constant
+          disabled: true
+        - name: max-public-structs
+          disabled: true
+        - name: import-shadowing
+          exclude:
+            - "**/*_test.go"
+        - name: confusing-naming
+          disabled: true
+        - name: unhandled-error
+          arguments:
+            - fmt\.Print
+            - fmt\.Println
+            - fmt\.Fprint
+            - fmt\.Fprintln
+formatters:
+  exclusions:
+    generated: lax
+    paths:
+      - third_party$
+      - builtin$
+      - examples$

@@ -1,0 +1,21 @@
+networks:
+  go-application-template-network:
+    driver: bridge
+    name: go-application-template-network
+
+services:
+  nats:
+    container_name: go-application-template-nats
+    restart: unless-stopped
+    image: nats:2.10.1
+    command: -p 4222 --cluster_name "go-application-template-cluster" -m 8222 -js -V -c /custom-config/nats-server.conf
+    ports:
+      - 4222:4222
+      - 6222:6222
+      - 8222:8222
+    volumes:
+      - ../configs/nats-server.conf:/custom-config/nats-server.conf
+    networks:
+      go-application-template-network:
+        aliases:
+          - nats
