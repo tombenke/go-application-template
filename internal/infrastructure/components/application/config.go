@@ -3,7 +3,7 @@ package application
 import (
 	"github.com/spf13/pflag"
 	"github.com/tombenke/go-12f-common/v2/config"
-	"github.com/tombenke/go-application-template/internal/infrastructure/webserver"
+	"github.com/tombenke/go-application-template/internal/infrastructure/components/webserver"
 	"go.uber.org/multierr"
 )
 

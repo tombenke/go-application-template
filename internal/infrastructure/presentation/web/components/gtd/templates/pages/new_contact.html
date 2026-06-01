@@ -1,0 +1,36 @@
+{{ define "content" }}
+
+<h1> New Contact </h1>
+<div id="contacts-list">placeholder for the contacts list</div>
+
+<form action="/contacts/new" method="post">
+    <fieldset>
+        <legend>Contact Values</legend>
+        <div class="field border">
+            <label for="email">Email</label>
+            <input name="email" id="email" type="text" placeholder="Email" value="{{ .Contact.Email }}">
+        </div>
+        <div class="field border">
+            <label for="first_name">First Name</label>
+            <input name="first_name" id="first_name" type="text" placeholder="First Name"
+                value="{{ .Contact.FirstName }}">
+        </div>
+        <div class="field border">
+            <label for="last_name">Last Name</label>
+            <input name="last_name" id="last_name" type="text" placeholder="Last Name" value="{{ .Contact.LastName }}">
+        </div>
+        <div class="field border">
+            <label for="phone">Phone</label>
+            <input name="phone" id="phone" type="text" placeholder="Phone" value="{{ $.Contact.Phone }}">
+        </div>
+        <div>
+            <button hx-post="/contacts" hx-target="body" hx-swap="outerHTML">Save</button>
+        </div>
+    </fieldset>
+</form>
+
+<p>
+    <a class="link underline" href="/contacts">Back</a>
+</p>
+
+{{ end }}

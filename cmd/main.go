@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/tombenke/go-12f-common/v2/apprun"
 	"github.com/tombenke/go-12f-common/v2/must"
-	"github.com/tombenke/go-application-template/internal/application"
+	"github.com/tombenke/go-application-template/internal/infrastructure/components/application"
 )
 
 func main() {

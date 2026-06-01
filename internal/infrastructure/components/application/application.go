@@ -9,9 +9,11 @@ import (
 	"github.com/tombenke/go-12f-common/v2/buildinfo"
 	"github.com/tombenke/go-12f-common/v2/log"
 	"github.com/tombenke/go-12f-common/v2/must"
-	appservice "github.com/tombenke/go-application-template/internal/app_service"
-	"github.com/tombenke/go-application-template/internal/infrastructure/controller"
-	"github.com/tombenke/go-application-template/internal/infrastructure/webserver"
+	appservices "github.com/tombenke/go-application-template/internal/application"
+	"github.com/tombenke/go-application-template/internal/infrastructure/components/webserver"
+	"github.com/tombenke/go-application-template/internal/infrastructure/presentation/web"
+	"github.com/tombenke/go-application-template/internal/infrastructure/presentation/web/components/gtd"
+	inmemory "github.com/tombenke/go-application-template/internal/infrastructure/repositories/in_memory"
 )
 
 var _ apprun.Application = (*Application)(nil)
@@ -21,7 +23,7 @@ type Application struct {
 	config *Config
 	web    *webserver.WebServer
 
-	ctrl appservice.ControllerService
+	gtd appservices.GTDManager
 	// The internal components of the application
 	components []apprun.ComponentLifecycleManager
 }
@@ -29,13 +31,17 @@ type Application struct {
 // Creates a new application instance.
 func NewApplication(config *Config) (apprun.Application, error) {
 
-	controllerService := controller.NewController( /*inject services here*/ )
-	webComponent := must.MustVal(webserver.NewWebServer(&config.webserver, controllerService))
+	gtdRepository := inmemory.NewGTDRepository()
+	gtdManager := appservices.NewGTDManager(gtdRepository)
+	contactsController := gtd.NewController(gtdManager)
+
+	router := web.NewRouter(contactsController)
+	webComponent := must.MustVal(webserver.NewWebServer(&config.webserver, router))
 
 	// Create and return the application object
 	return &Application{
 		config: config,
-		ctrl:   controllerService,
+		gtd:    gtdManager,
 		web:    webComponent,
 		components: []apprun.ComponentLifecycleManager{
 			webComponent,

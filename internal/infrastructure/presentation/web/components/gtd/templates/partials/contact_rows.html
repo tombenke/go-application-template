@@ -1,0 +1,15 @@
+{{ define "contact_rows" }}
+{{- range .Contacts }}
+<tr>
+    <td>{{ .FirstName }}</td>
+    <td>{{ .LastName }}</td>
+    <td>{{ .Phone }}</td>
+    <td>{{ .Email }}</td>
+    <td><button hx-delete="/contacts/{{ .ID }}" hx-target="body" hx-swap="outerHTML">Delete</button></td>
+</tr>
+{{- else }}
+<tr>
+    <td colspan="6">No contacts have been saved yet.</td>
+</tr>
+{{- end }}
+{{ end }}

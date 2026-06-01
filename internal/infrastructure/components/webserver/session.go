@@ -2,11 +2,8 @@ package webserver
 
 import (
 	"context"
-	"net/http"
 	"sync"
 	"time"
-
-	"github.com/google/uuid"
 )
 
 type sessionContextKey string
@@ -61,30 +58,30 @@ func (s *SessionStore) cleanupExpiredLocked(now time.Time) {
 	}
 }
 
-func (ws *WebServer) withSession(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		sessionID := ""
-		cookie, err := r.Cookie("propel-session-id")
-		if err == nil {
-			sessionID = cookie.Value
-		}
+// func (ws *WebServer) withSession(next http.Handler) http.Handler {
+// 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+// 		sessionID := ""
+// 		cookie, err := r.Cookie("propel-session-id")
+// 		if err == nil {
+// 			sessionID = cookie.Value
+// 		}
 
-		if sessionID == "" {
-			sessionID = uuid.NewString()
-			http.SetCookie(w, &http.Cookie{
-				Name:     "propel-session-id",
-				Value:    sessionID,
-				Path:     "/",
-				HttpOnly: true,
-				SameSite: http.SameSiteLaxMode,
-			})
-		}
+// 		if sessionID == "" {
+// 			sessionID = uuid.NewString()
+// 			http.SetCookie(w, &http.Cookie{
+// 				Name:     "propel-session-id",
+// 				Value:    sessionID,
+// 				Path:     "/",
+// 				HttpOnly: true,
+// 				SameSite: http.SameSiteLaxMode,
+// 			})
+// 		}
 
-		_ = ws.sessions.GetOrCreate(sessionID)
-		ctx := context.WithValue(r.Context(), sessionIDKey, sessionID)
-		next.ServeHTTP(w, r.WithContext(ctx))
-	})
-}
+// 		_ = ws.sessions.GetOrCreate(sessionID)
+// 		ctx := context.WithValue(r.Context(), sessionIDKey, sessionID)
+// 		next.ServeHTTP(w, r.WithContext(ctx))
+// 	})
+// }
 
 func SessionIDFromContext(ctx context.Context) string {
 	sessionID, ok := ctx.Value(sessionIDKey).(string)

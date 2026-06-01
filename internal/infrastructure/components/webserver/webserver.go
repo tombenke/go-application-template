@@ -2,10 +2,8 @@ package webserver
 
 import (
 	"context"
-	"embed"
 	"errors"
 	"fmt"
-	"html/template"
 	"net/http"
 	"sync"
 	"time"
@@ -13,17 +11,11 @@ import (
 	"github.com/tombenke/go-12f-common/v2/apprun"
 	"github.com/tombenke/go-12f-common/v2/healthcheck"
 	"github.com/tombenke/go-12f-common/v2/log"
-	appservice "github.com/tombenke/go-application-template/internal/app_service"
 )
-
-//go:embed templates/*.html
-var templatesFS embed.FS
 
 type WebServer struct {
 	config     *Config
-	controller appservice.ControllerService
 	sessions   *SessionStore
-	templates  *template.Template
 	router     http.Handler
 	httpServer *http.Server
 	err        error
@@ -33,21 +25,14 @@ type WebServer struct {
 
 var _ apprun.ComponentLifecycleManager = (*WebServer)(nil)
 
-func NewWebServer(cfg *Config, controller appservice.ControllerService) (*WebServer, error) {
-	tmpl, err := template.ParseFS(templatesFS, "templates/*.html")
-	if err != nil {
-		return nil, fmt.Errorf("failed to parse templates: %w", err)
-	}
+func NewWebServer(cfg *Config, router http.Handler) (*WebServer, error) {
 
 	ws := &WebServer{
-		config:     cfg,
-		controller: controller,
-		sessions:   NewSessionStore(30 * time.Minute),
-		templates:  tmpl,
-		err:        healthcheck.ServiceNotAvailableError{},
+		config:   cfg,
+		sessions: NewSessionStore(30 * time.Minute),
+		router:   router,
+		err:      healthcheck.ServiceNotAvailableError{},
 	}
-
-	ws.registerRoutes()
 
 	return ws, nil
 }
@@ -112,13 +97,4 @@ func (ws *WebServer) Readiness(_ context.Context) error {
 		return nil
 	}
 	return healthcheck.ServiceNotAvailableError{}
-}
-
-func (ws *WebServer) registerRoutes() http.Handler {
-	mux := http.NewServeMux()
-	mux.HandleFunc("GET /", ws.handleIndex)
-
-	ws.router = ws.withSession(mux)
-
-	return ws.router
 }

@@ -1,0 +1,23 @@
+{{ define "content" }}
+<h1>Contacts</h1>
+
+<table class="border stripes">
+    <thead>
+        <tr>
+            <th>FirstName</th>
+            <th>LastName</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {{ template "contact_rows" . }}
+    </tbody>
+</table>
+
+<p>
+    <a class="button" href="/contacts/new">Add Contact</a>
+</p>
+
+{{ end }}

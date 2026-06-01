@@ -1,0 +1,32 @@
+{{ define "base" }}
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="google" content="notranslate">
+    <title>{{ .Title }}</title>
+    <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+
+    <link href="https://cdn.jsdelivr.net/npm/beercss@4.0.21/dist/cdn/beer.min.css" rel="stylesheet">
+    <script type="module" src="https://cdn.jsdelivr.net/npm/beercss@4.0.21/dist/cdn/beer.min.js"></script>
+    <script type="module"
+        src="https://cdn.jsdelivr.net/npm/material-dynamic-colors@1.1.4/dist/cdn/material-dynamic-colors.min.js"></script>
+
+</head>
+
+<body hx-boost="true" class="dark">
+    {{ template "header" . }}
+
+    <main class="responsive">
+
+        {{ block "content" . }} NOT FOUND {{ end }}
+        {{ template "footer" . }}
+
+    </main>
+
+</body>
+
+</html>{{ end }}
