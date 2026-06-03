@@ -1,4 +1,4 @@
-package application
+package di
 
 import (
 	"github.com/spf13/pflag"

@@ -1,4 +1,4 @@
-package application
+package di
 
 import (
 	"context"
@@ -9,7 +9,7 @@ import (
 	"github.com/tombenke/go-12f-common/v2/buildinfo"
 	"github.com/tombenke/go-12f-common/v2/log"
 	"github.com/tombenke/go-12f-common/v2/must"
-	appservices "github.com/tombenke/go-application-template/internal/application"
+	"github.com/tombenke/go-application-template/internal/application"
 	"github.com/tombenke/go-application-template/internal/infrastructure/components/webserver"
 	"github.com/tombenke/go-application-template/internal/infrastructure/presentation/web"
 	"github.com/tombenke/go-application-template/internal/infrastructure/presentation/web/components/gtd"
@@ -23,7 +23,7 @@ type Application struct {
 	config *Config
 	web    *webserver.WebServer
 
-	gtd appservices.GTDManager
+	gtd application.GTDManager
 	// The internal components of the application
 	components []apprun.ComponentLifecycleManager
 }
@@ -32,10 +32,10 @@ type Application struct {
 func NewApplication(config *Config) (apprun.Application, error) {
 
 	gtdRepository := inmemory.NewGTDRepository()
-	gtdManager := appservices.NewGTDManager(gtdRepository)
-	contactsController := gtd.NewController(gtdManager)
+	gtdManager := application.NewGTDManager(gtdRepository)
+	gtdController := gtd.NewController(gtdManager)
 
-	router := web.NewRouter(contactsController)
+	router := web.NewRouter(gtdController)
 	webComponent := must.MustVal(webserver.NewWebServer(&config.webserver, router))
 
 	// Create and return the application object

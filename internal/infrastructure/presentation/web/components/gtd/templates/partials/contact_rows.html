@@ -5,7 +5,9 @@
     <td>{{ .LastName }}</td>
     <td>{{ .Phone }}</td>
     <td>{{ .Email }}</td>
-    <td><button hx-delete="/contacts/{{ .ID }}" hx-target="body" hx-swap="outerHTML">Delete</button></td>
+    <td><button hx-delete="/contacts/{{ .ID }}" hx-target="body" hx-swap="outerHTML" hx-push-url="true"
+            hx-confirm="Are you sure you want to delete this contact?">Delete</button>
+    </td>
 </tr>
 {{- else }}
 <tr>
